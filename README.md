@@ -1,5 +1,10 @@
 # Algoritma Ong-Schnorr-Shamir
 
+[![CI/CD Pipeline](https://github.com/HaikalE/ong-schnorr-shamir-algorithm/actions/workflows/ci.yml/badge.svg)](https://github.com/HaikalE/ong-schnorr-shamir-algorithm/actions/workflows/ci.yml)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](https://github.com/HaikalE/ong-schnorr-shamir-algorithm)
+
 Implementasi lengkap algoritma Ong-Schnorr-Shamir dalam Python untuk **Digital Signature Scheme** dan **Subliminal Channel Scheme**.
 
 ## 📋 Deskripsi
@@ -16,9 +21,13 @@ Algoritma Ong-Schnorr-Shamir adalah algoritma kriptografi yang memiliki dua skem
 - ✅ Pembuatan kunci otomatis dengan berbagai ukuran
 - ✅ Verifikasi tanda tangan digital
 - ✅ Enkripsi dan dekripsi pesan tersembunyi
+- ✅ Demo interaktif dengan interface user-friendly
 - ✅ Contoh penggunaan yang lengkap
-- ✅ Test keamanan sederhana
 - ✅ Unit tests yang komprehensif
+- ✅ Test keamanan dan performa
+- ✅ CI/CD pipeline dengan GitHub Actions
+- ✅ Multi-platform support (Windows, macOS, Linux)
+- ✅ Multi-version Python support (3.7 - 3.11)
 - ✅ Dokumentasi lengkap
 
 ## 📦 Instalasi
@@ -34,14 +43,32 @@ cd ong-schnorr-shamir-algorithm
 python --version
 ```
 
-3. Jalankan contoh penggunaan:
+3. (Opsional) Buat virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+## 🎮 Quick Start
+
+### 1. Demo Interaktif (Recommended)
+```bash
+python demo.py
+```
+
+### 2. Contoh Lengkap
 ```bash
 python examples.py
 ```
 
-4. Jalankan unit tests:
+### 3. Unit Tests
 ```bash
 python test_ong_schnorr_shamir.py
+```
+
+### 4. Penggunaan Basic
+```bash
+python ong_schnorr_shamir.py
 ```
 
 ## 🔧 Penggunaan
@@ -137,13 +164,34 @@ print(f"Dekripsi berhasil: {original_message == decrypted_message}")
 ong-schnorr-shamir-algorithm/
 ├── README.md                      # Dokumentasi utama
 ├── ong_schnorr_shamir.py         # Implementasi algoritma
+├── demo.py                       # Demo interaktif
 ├── examples.py                   # Contoh penggunaan lengkap
 ├── test_ong_schnorr_shamir.py    # Unit tests
 ├── requirements.txt              # Dependencies
-└── LICENSE                       # MIT License
+├── LICENSE                       # MIT License
+├── CHANGELOG.md                  # Version history
+├── CONTRIBUTING.md               # Contributing guidelines
+└── .github/
+    └── workflows/
+        └── ci.yml               # GitHub Actions CI/CD
 ```
 
 ## 🔍 Contoh Output
+
+### Demo Interaktif
+```
+🔐 DEMO INTERAKTIF ALGORITMA ONG-SCHNORR-SHAMIR 🔐
+==================================================================
+
+📋 MENU UTAMA:
+1. 📝 Demo Digital Signature Scheme
+2. 🔍 Demo Subliminal Channel Scheme
+3. 🔑 Generate Kunci Baru
+4. 🧪 Test Keamanan
+5. 📊 Benchmark Performa
+6. ❓ Bantuan & Penjelasan
+0. 🚪 Keluar
+```
 
 ### Digital Signature
 ```
@@ -173,61 +221,92 @@ Dekripsi berhasil: ✓ Ya
 
 ## ⚡ Performa
 
-- **Pembuatan kunci 512-bit**: ~0.1-1 detik
-- **Pembuatan tanda tangan**: ~0.001 detik
-- **Verifikasi tanda tangan**: ~0.001 detik
-- **Enkripsi subliminal**: ~0.001 detik
-- **Dekripsi subliminal**: ~0.001 detik
+| Operasi | Waktu (512-bit) | Throughput |
+|---------|----------------|------------|
+| Pembuatan kunci | ~0.1-1 detik | - |
+| Pembuatan signature | ~0.001 detik | ~1000 ops/sec |
+| Verifikasi signature | ~0.001 detik | ~1000 ops/sec |
+| Enkripsi subliminal | ~0.001 detik | ~1000 ops/sec |
+| Dekripsi subliminal | ~0.001 detik | ~1000 ops/sec |
 
 ## 🔒 Keamanan
 
 Algoritma ini menggunakan:
 - **Miller-Rabin primality test** untuk pembuatan bilangan prima
 - **Modular arithmetic** untuk operasi kriptografi
-- **Random number generation** untuk bilangan acak yang aman
+- **Cryptographically secure random number generation**
+- **Input validation** dan error handling yang komprehensif
 
 > ⚠️ **Catatan**: Implementasi ini dibuat untuk tujuan edukasi dan penelitian. Untuk penggunaan produksi, diperlukan review keamanan yang lebih mendalam.
 
 ## 🧪 Testing
 
-### Jalankan Contoh Lengkap
+### Jalankan Semua Tests
 ```bash
-python examples.py
-```
-
-### Jalankan Unit Tests
-```bash
+# Unit tests
 python test_ong_schnorr_shamir.py
+
+# Contoh lengkap  
+python examples.py
+
+# Demo interaktif
+python demo.py
 ```
 
-### Test yang Tersedia:
+### GitHub Actions CI/CD
+
+Repository ini dilengkapi dengan GitHub Actions yang otomatis menjalankan:
+
+- ✅ **Unit tests** pada multiple Python versions (3.7-3.11)
+- ✅ **Cross-platform testing** (Ubuntu, Windows, macOS)  
+- ✅ **Security tests** untuk validasi algoritma
+- ✅ **Performance benchmarks** untuk regression testing
+- ✅ **Code quality checks** dengan linting
+
+### Test Coverage
+
 - ✅ Digital signature dengan berbagai pesan
 - ✅ Subliminal channel dengan berbagai skenario
 - ✅ Pembuatan kunci dengan berbagai ukuran
-- ✅ Test keamanan sederhana
-- ✅ Test modifikasi tanda tangan
-- ✅ Test properti keamanan algoritma
+- ✅ Test keamanan dan modifikasi signature
+- ✅ Test properti matematika algoritma
 - ✅ Test validasi input dan error handling
+- ✅ Test performa dan throughput
 
 ## 📚 Referensi
 
-- Makalah asli Ong-Schnorr-Shamir
-- Cryptography theory dan praktek
-- Digital signature standards
+- Makalah asli Ong-Schnorr-Shamir algorithm
+- Handbook of Applied Cryptography
+- Digital signature standards dan best practices
+- Modern cryptography theory dan implementation
 
 ## 🤝 Kontribusi
 
-Kontribusi sangat diterima! Silakan:
+Kontribusi sangat diterima! Silakan baca [CONTRIBUTING.md](CONTRIBUTING.md) untuk panduan lengkap.
 
+**Quick steps:**
 1. Fork repository ini
-2. Buat branch fitur baru (`git checkout -b fitur-baru`)
-3. Commit perubahan (`git commit -am 'Tambah fitur baru'`)
-4. Push ke branch (`git push origin fitur-baru`)
+2. Buat branch fitur baru (`git checkout -b feature/amazing-feature`)
+3. Commit perubahan (`git commit -m 'Add amazing feature'`)
+4. Push ke branch (`git push origin feature/amazing-feature`)
 5. Buat Pull Request
+
+### Types of Contributions Needed
+
+- 🐛 **Bug fixes** dan improvements
+- ✨ **New features** dan enhancements  
+- 📚 **Documentation** improvements
+- 🧪 **Additional tests** dan benchmarks
+- 🔧 **Performance optimizations**
+- 🌐 **Internationalization** (i18n)
 
 ## 📄 Lisensi
 
 MIT License - lihat file [LICENSE](LICENSE) untuk detail lengkap.
+
+## 📝 Changelog
+
+Lihat [CHANGELOG.md](CHANGELOG.md) untuk riwayat perubahan dan versi.
 
 ## 👤 Penulis
 
@@ -237,12 +316,54 @@ MIT License - lihat file [LICENSE](LICENSE) untuk detail lengkap.
 
 ## 📞 Dukungan
 
-Jika Anda menemukan bug atau memiliki pertanyaan:
+### Mendapatkan Bantuan
 
-1. Buka [Issues](https://github.com/HaikalE/ong-schnorr-shamir-algorithm/issues)
-2. Berikan deskripsi yang jelas
-3. Sertakan contoh kode jika memungkinkan
+- 📖 **Dokumentasi**: Baca README dan file dokumentasi
+- 💬 **Discussions**: Untuk pertanyaan umum dan diskusi
+- 🐛 **Issues**: Untuk bug reports dan feature requests
+- 💼 **Email**: Untuk security issues (private)
+
+### Melaporkan Issues
+
+1. Cek [existing issues](https://github.com/HaikalE/ong-schnorr-shamir-algorithm/issues) terlebih dahulu
+2. Gunakan template yang tersedia
+3. Berikan informasi yang lengkap:
+   - Python version dan OS
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Error messages atau stack traces
+
+### Security Issues
+
+Untuk security vulnerabilities, jangan buat public issue. Email maintainer secara langsung dengan detail lengkap.
 
 ---
 
-⭐ Jika project ini membantu Anda, jangan lupa berikan star!
+## 🌟 Showcase
+
+### Badge untuk README Anda
+
+Jika Anda menggunakan algoritma ini dalam project Anda:
+
+```markdown
+[![Powered by Ong-Schnorr-Shamir](https://img.shields.io/badge/Powered%20by-Ong--Schnorr--Shamir-blue)](https://github.com/HaikalE/ong-schnorr-shamir-algorithm)
+```
+
+### Citation
+
+Jika Anda menggunakan implementasi ini dalam penelitian:
+
+```bibtex
+@software{ong_schnorr_shamir_2025,
+  author = {HaikalE},
+  title = {Ong-Schnorr-Shamir Algorithm Implementation},
+  url = {https://github.com/HaikalE/ong-schnorr-shamir-algorithm},
+  year = {2025}
+}
+```
+
+---
+
+⭐ **Jika project ini membantu Anda, jangan lupa berikan star!** ⭐
+
+**Terima kasih telah menggunakan Ong-Schnorr-Shamir Algorithm! 🚀**
