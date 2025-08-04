@@ -6,6 +6,7 @@ Contoh penggunaan algoritma Ong-Schnorr-Shamir yang SUDAH DIPERBAIKI
 MAJOR UPDATE: Examples ini sekarang menggunakan implementasi yang benar!
 - Bug formula S2 sudah diperbaiki: k * (1/2) * term, bukan (1/2k) * term
 - Bug formula dekripsi subliminal sudah diperbaiki: w = S1 - k^-1 * S2
+- FIXED: Benchmark crash dengan time.perf_counter() dan guard clauses
 
 File ini berisi berbagai contoh implementasi dan penggunaan
 algoritma Ong-Schnorr-Shamir untuk Digital Signature dan Subliminal Channel.
@@ -46,9 +47,9 @@ def example_digital_signature():
         print(f"\n   📝 Pesan {i}: {message}")
         
         # Buat tanda tangan
-        start_time = time.time()
+        start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
         s1, s2, r = ds.sign_message(message)
-        sign_time = time.time() - start_time
+        sign_time = time.perf_counter() - start_time
         
         print(f"   🔐 Tanda tangan S1: {s1}")
         print(f"   🔐 Tanda tangan S2: {s2}")
@@ -56,9 +57,9 @@ def example_digital_signature():
         print(f"   ⏱️  Waktu pembuatan: {sign_time:.6f} detik")
         
         # Verifikasi tanda tangan
-        start_time = time.time()
+        start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
         is_valid = ds.verify_signature(message, s1, s2)
-        verify_time = time.time() - start_time
+        verify_time = time.perf_counter() - start_time
         
         if is_valid:
             print(f"   ✅ Hasil verifikasi: VALID")
@@ -115,9 +116,9 @@ def example_subliminal_channel():
         
         try:
             # Buat pesan tersembunyi
-            start_time = time.time()
+            start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
             s1, s2, cover = sc.create_subliminal_message(original_msg, cover_msg)
-            create_time = time.time() - start_time
+            create_time = time.perf_counter() - start_time
             
             print(f"   🔐 Tanda tangan S1: {s1}")
             print(f"   🔐 Tanda tangan S2: {s2}")
@@ -125,9 +126,9 @@ def example_subliminal_channel():
             
             # Simulasi verifikasi oleh pihak ketiga (hanya melihat pesan samaran)
             print(f"\n   👁️  [PERSPEKTIF PIHAK KETIGA]")
-            start_time = time.time()
+            start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
             cover_valid = sc.verify_cover_message(cover, s1, s2)
-            verify_time = time.time() - start_time
+            verify_time = time.perf_counter() - start_time
             
             print(f"   👀 Pesan yang terlihat: {cover}")
             if cover_valid:
@@ -139,9 +140,9 @@ def example_subliminal_channel():
             
             # Simulasi dekripsi oleh penerima sah
             print(f"\n   🔓 [PERSPEKTIF PENERIMA SAH]")
-            start_time = time.time()
+            start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
             decrypted_msg = sc.decrypt_original_message(s1, s2)
-            decrypt_time = time.time() - start_time
+            decrypt_time = time.perf_counter() - start_time
             
             print(f"   🔓 Pesan yang didekripsi: {decrypted_msg}")
             
@@ -176,11 +177,11 @@ def example_key_generation():
     
     for size in key_sizes:
         print(f"\n🔑 Membuat kunci {size}-bit...")
-        start_time = time.time()
+        start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
         
         try:
             n, k, h = generate_keys(size)
-            generation_time = time.time() - start_time
+            generation_time = time.perf_counter() - start_time
             
             print(f"   ✅ Kunci berhasil dibuat!")
             print(f"   🔑 Kunci publik (n): {n}")
@@ -276,9 +277,9 @@ def example_security_test():
 
 def performance_benchmark():
     """
-    Benchmark performa algoritma yang sudah diperbaiki
+    Benchmark performa algoritma yang sudah diperbaiki - FIXED VERSION
     """
-    print_separator("BENCHMARK PERFORMA")
+    print_separator("BENCHMARK PERFORMA (FIXED: No More Crash!)")
     
     print("\n⚡ Running performance benchmark...")
     
@@ -297,9 +298,9 @@ def performance_benchmark():
     valid_signatures = 0
     
     for msg in messages:
-        start_time = time.time()
+        start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
         s1, s2, r = ds.sign_message(msg)
-        sign_time = time.time() - start_time
+        sign_time = time.perf_counter() - start_time
         sign_times.append(sign_time)
         
         # Quick verification
@@ -311,18 +312,24 @@ def performance_benchmark():
     verify_times = []
     
     for _ in range(iterations):
-        start_time = time.time()
+        start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
         ds.verify_signature(messages[0], s1, s2)
-        verify_time = time.time() - start_time
+        verify_time = time.perf_counter() - start_time
         verify_times.append(verify_time)
     
-    avg_sign = sum(sign_times) / len(sign_times)
-    avg_verify = sum(verify_times) / len(verify_times)
+    # FIXED: Add guard clauses to prevent division by zero
+    avg_sign = sum(sign_times) / len(sign_times) if sign_times else 0
+    avg_verify = sum(verify_times) / len(verify_times) if verify_times else 0
     
     print(f"   ⏱️  Rata-rata waktu signing: {avg_sign:.6f} detik")
     print(f"   ⏱️  Rata-rata waktu verifikasi: {avg_verify:.6f} detik")
-    print(f"   🚀 Throughput signing: {1/avg_sign:.0f} ops/detik")
-    print(f"   🚀 Throughput verifikasi: {1/avg_verify:.0f} ops/detik")
+    
+    # FIXED: Guard clauses for throughput calculation
+    throughput_sign_str = f"{1/avg_sign:.0f} ops/detik" if avg_sign > 0 else "N/A (terlalu cepat)"
+    throughput_verify_str = f"{1/avg_verify:.0f} ops/detik" if avg_verify > 0 else "N/A (terlalu cepat)"
+    
+    print(f"   🚀 Throughput signing: {throughput_sign_str}")
+    print(f"   🚀 Throughput verifikasi: {throughput_verify_str}")
     print(f"   ✅ Valid signatures: {valid_signatures}/{iterations}")
     
     # Benchmark Subliminal Channel (if possible)
@@ -336,14 +343,14 @@ def performance_benchmark():
             original = 1000 + i
             cover = 2000 + i
             
-            start_time = time.time()
+            start_time = time.perf_counter()  # FIXED: Use perf_counter for precision
             s1, s2, c = sc.create_subliminal_message(original, cover)
             
             # Verify and decrypt
             cover_valid = sc.verify_cover_message(c, s1, s2)
             decrypted = sc.decrypt_original_message(s1, s2)
             
-            total_time = time.time() - start_time
+            total_time = time.perf_counter() - start_time
             subliminal_times.append(total_time)
             
             if cover_valid and decrypted == original:
@@ -370,6 +377,7 @@ def main():
     print("- Bug formula S2 diperbaiki: k * (1/2) * term")
     print("- Bug formula dekripsi subliminal diperbaiki: w = S1 - k^-1 * S2")
     print("- Unit tests diperbaiki untuk menguji implementasi yang benar")
+    print("- FIXED: Benchmark crash dengan time.perf_counter() dan guard clauses")
     print("\nDibuat oleh: HaikalE")
     print("Tanggal:", time.strftime("%Y-%m-%d %H:%M:%S"))
     
@@ -387,6 +395,7 @@ def main():
         print("✅ Digital Signature verification sekarang berhasil")
         print("✅ Subliminal Channel decryption sekarang berhasil")
         print("✅ Security tests menunjukkan algoritma aman")
+        print("🔧 FIXED: Benchmark tidak akan crash lagi!")
         
     except KeyboardInterrupt:
         print("\n\n👋 Program dihentikan oleh pengguna.")
