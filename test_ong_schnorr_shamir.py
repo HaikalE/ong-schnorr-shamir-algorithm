@@ -5,6 +5,7 @@ Test untuk algoritma Ong-Schnorr-Shamir yang SUDAH DIPERBAIKI
 
 MAJOR UPDATE: Test ini sekarang menguji implementasi yang benar,
 bukan lagi memberikan "rasa aman palsu" seperti sebelumnya.
+FIXED: SyntaxError dengan backslash dalam f-string sudah diperbaiki.
 
 File ini berisi unit test untuk memverifikasi bahwa implementasi
 algoritma yang sudah diperbaiki bekerja dengan benar.
@@ -302,6 +303,7 @@ def run_tests():
     print("- Bug formula S2 sudah diperbaiki")
     print("- Bug formula dekripsi subliminal sudah diperbaiki")
     print("- Test tidak lagi memberikan 'rasa aman palsu'")
+    print("- FIXED: SyntaxError dengan backslash dalam f-string")
     print("=" * 70)
     
     # Buat test suite
@@ -336,15 +338,25 @@ def run_tests():
         print(f"❌ Failures: {len(result.failures)}")
         print(f"❌ Errors: {len(result.errors)}")
         
+        # FIXED: Handle backslash in f-string properly
         if result.failures:
             print("\n🔍 FAILURES:")
-            for test, traceback in result.failures:
-                print(f"- {test}: {traceback.split('AssertionError: ')[-1].split('\\n')[0]}")
+            for test, traceback_text in result.failures:
+                # Split outside of f-string to avoid backslash issues
+                error_parts = traceback_text.split('AssertionError: ')
+                if len(error_parts) > 1:
+                    error_message = error_parts[-1].splitlines()[0]
+                else:
+                    error_message = "Unknown error"
+                print(f"- {test}: {error_message}")
         
         if result.errors:
             print("\n🔍 ERRORS:")
-            for test, traceback in result.errors:
-                print(f"- {test}: Error occurred")
+            for test, traceback_text in result.errors:
+                # Split outside of f-string to avoid backslash issues
+                error_lines = traceback_text.splitlines()
+                error_message = error_lines[-1] if error_lines else "Unknown error"
+                print(f"- {test}: {error_message}")
     
     print("=" * 70)
     
@@ -357,6 +369,7 @@ if __name__ == "__main__":
     if success:
         print("\n🚀 READY TO GO!")
         print("Algoritma sudah diperbaiki dan siap digunakan!")
+        print("🔧 FIXED: Test runner tidak akan crash lagi!")
     else:
         print("\n⚠️  NEEDS MORE WORK")
         print("Masih ada masalah yang perlu diperbaiki.")
