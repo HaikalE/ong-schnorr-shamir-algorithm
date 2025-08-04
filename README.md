@@ -18,6 +18,7 @@ Algoritma Ong-Schnorr-Shamir adalah algoritma kriptografi yang memiliki dua skem
 - ✅ Enkripsi dan dekripsi pesan tersembunyi
 - ✅ Contoh penggunaan yang lengkap
 - ✅ Test keamanan sederhana
+- ✅ Unit tests yang komprehensif
 - ✅ Dokumentasi lengkap
 
 ## 📦 Instalasi
@@ -36,6 +37,11 @@ python --version
 3. Jalankan contoh penggunaan:
 ```bash
 python examples.py
+```
+
+4. Jalankan unit tests:
+```bash
+python test_ong_schnorr_shamir.py
 ```
 
 ## 🔧 Penggunaan
@@ -129,11 +135,12 @@ print(f"Dekripsi berhasil: {original_message == decrypted_message}")
 
 ```
 ong-schnorr-shamir-algorithm/
-├── README.md                 # Dokumentasi utama
-├── ong_schnorr_shamir.py    # Implementasi algoritma
-├── examples.py              # Contoh penggunaan lengkap
-├── requirements.txt         # Dependencies (jika ada)
-└── tests/                   # Unit tests (akan ditambahkan)
+├── README.md                      # Dokumentasi utama
+├── ong_schnorr_shamir.py         # Implementasi algoritma
+├── examples.py                   # Contoh penggunaan lengkap
+├── test_ong_schnorr_shamir.py    # Unit tests
+├── requirements.txt              # Dependencies
+└── LICENSE                       # MIT License
 ```
 
 ## 🔍 Contoh Output
@@ -183,18 +190,24 @@ Algoritma ini menggunakan:
 
 ## 🧪 Testing
 
-Jalankan contoh lengkap dengan berbagai test:
-
+### Jalankan Contoh Lengkap
 ```bash
 python examples.py
 ```
 
-Test yang tersedia:
+### Jalankan Unit Tests
+```bash
+python test_ong_schnorr_shamir.py
+```
+
+### Test yang Tersedia:
 - ✅ Digital signature dengan berbagai pesan
 - ✅ Subliminal channel dengan berbagai skenario
 - ✅ Pembuatan kunci dengan berbagai ukuran
 - ✅ Test keamanan sederhana
 - ✅ Test modifikasi tanda tangan
+- ✅ Test properti keamanan algoritma
+- ✅ Test validasi input dan error handling
 
 ## 📚 Referensi
 
