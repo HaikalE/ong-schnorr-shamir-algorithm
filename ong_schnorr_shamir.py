@@ -8,6 +8,8 @@ class OngSchnorrShamir:
     Implementasi Algoritma Ong-Schnorr-Shamir untuk:
     1. Digital Signature Scheme
     2. Subliminal Channel Scheme
+    
+    FIXED VERSION - Memperbaiki bug matematis fundamental
     """
     
     def __init__(self, n: int = None, k: int = None):
@@ -104,6 +106,8 @@ class OngSchnorrShamir:
 class DigitalSignature(OngSchnorrShamir):
     """
     Implementasi skema tanda tangan digital Ong-Schnorr-Shamir
+    
+    FIXED VERSION - Perbaikan formula S2 yang benar
     """
     
     def sign_message(self, message: int) -> Tuple[int, int, int]:
@@ -127,9 +131,9 @@ class DigitalSignature(OngSchnorrShamir):
             
             s1 = (inv_2 * ((message * inv_r) + r)) % self.n
             
-            # S2 = (1/(2k)) * (M/r - r) mod n
-            inv_2k = pow(2 * self.k, -1, self.n)  # Modular inverse of 2k
-            s2 = (inv_2k * ((message * inv_r) - r)) % self.n
+            # S2 = (k/2) * (M/r - r) mod n  [FIXED: bukan (1/2k) tapi k * (1/2)]
+            term = ((message * inv_r) - r) % self.n
+            s2 = (self.k * inv_2 * term) % self.n
             
             return s1, s2, r
             
@@ -160,6 +164,8 @@ class DigitalSignature(OngSchnorrShamir):
 class SubliminalChannel(OngSchnorrShamir):
     """
     Implementasi skema saluran tersembunyi (subliminal channel) Ong-Schnorr-Shamir
+    
+    FIXED VERSION - Perbaikan formula S2 dan dekripsi yang benar
     """
     
     def create_subliminal_message(self, original_message: int, cover_message: int) -> Tuple[int, int, int]:
@@ -186,9 +192,9 @@ class SubliminalChannel(OngSchnorrShamir):
             
             s1 = (inv_2 * ((cover_message * inv_w) + original_message)) % self.n
             
-            # S2 = (1/(2k)) * (w'/w - w) mod n
-            inv_2k = pow(2 * self.k, -1, self.n)
-            s2 = (inv_2k * ((cover_message * inv_w) - original_message)) % self.n
+            # S2 = (k/2) * (w'/w - w) mod n  [FIXED: bukan (1/2k) tapi k * (1/2)]
+            term = ((cover_message * inv_w) - original_message) % self.n
+            s2 = (self.k * inv_2 * term) % self.n
             
             return s1, s2, cover_message
             
@@ -219,6 +225,10 @@ class SubliminalChannel(OngSchnorrShamir):
         """
         Dekripsi untuk mendapatkan pesan asli (oleh penerima sah)
         
+        FIXED VERSION - Formula yang benar berdasarkan aljabar:
+        2S1 = w'/w + w  dan  2k^-1*S2 = w'/w - w
+        Maka: w = S1 - k^-1 * S2  (bukan plus!)
+        
         Args:
             s1: Tanda tangan S1
             s2: Tanda tangan S2
@@ -227,9 +237,9 @@ class SubliminalChannel(OngSchnorrShamir):
             Pesan asli (w)
         """
         try:
-            # w = S1 + k^-1 * S2
+            # w = S1 - k^-1 * S2  [FIXED: minus, bukan plus!]
             k_inv = pow(self.k, -1, self.n)
-            original_message = (s1 + (k_inv * s2)) % self.n
+            original_message = (s1 - (k_inv * s2)) % self.n
             
             return original_message
             
@@ -255,8 +265,12 @@ def generate_keys(bits: int = 512) -> Tuple[int, int, int]:
 
 
 if __name__ == "__main__":
-    # Contoh penggunaan sederhana
-    print("=== Ong-Schnorr-Shamir Algorithm Demo ===")
+    # Demo dengan implementasi yang sudah diperbaiki
+    print("=== Ong-Schnorr-Shamir Algorithm Demo (FIXED VERSION) ===")
+    print("\n🔧 PERBAIKAN IMPLEMENTASI:")
+    print("- Formula S2 diperbaiki: k * (1/2) * term, bukan (1/2k) * term")
+    print("- Formula dekripsi subliminal: w = S1 - k^-1 * S2, bukan plus")
+    
     print("\n1. Digital Signature Scheme:")
     
     # Digital Signature
@@ -276,7 +290,12 @@ if __name__ == "__main__":
     
     # Verify signature
     is_valid = ds.verify_signature(message, s1, s2)
-    print(f"Verifikasi: {'Berhasil' if is_valid else 'Gagal'}")
+    print(f"Verifikasi: {'✅ BERHASIL' if is_valid else '❌ GAGAL'}")
+    
+    # Test dengan pesan berbeda untuk memastikan security
+    wrong_message = message + 1
+    is_valid_wrong = ds.verify_signature(wrong_message, s1, s2)
+    print(f"Verifikasi pesan salah ({wrong_message}): {'✅ BERHASIL (MASALAH!)' if is_valid_wrong else '❌ GAGAL (Expected)'}")
     
     print("\n2. Subliminal Channel Scheme:")
     
@@ -288,16 +307,26 @@ if __name__ == "__main__":
     print(f"Pesan asli (w): {original_msg}")
     print(f"Pesan samaran (w'): {cover_msg}")
     
-    # Create subliminal message
-    s1_sub, s2_sub, cover = sc.create_subliminal_message(original_msg, cover_msg)
-    print(f"Tanda tangan S1: {s1_sub}")
-    print(f"Tanda tangan S2: {s2_sub}")
-    
-    # Verify cover message (by third party)
-    cover_valid = sc.verify_cover_message(cover, s1_sub, s2_sub)
-    print(f"Verifikasi pesan samaran: {'Berhasil' if cover_valid else 'Gagal'}")
-    
-    # Decrypt original message (by legitimate receiver)
-    decrypted_msg = sc.decrypt_original_message(s1_sub, s2_sub)
-    print(f"Pesan asli yang didekripsi: {decrypted_msg}")
-    print(f"Dekripsi berhasil: {'Ya' if decrypted_msg == original_msg else 'Tidak'}")
+    try:
+        # Create subliminal message
+        s1_sub, s2_sub, cover = sc.create_subliminal_message(original_msg, cover_msg)
+        print(f"Tanda tangan S1: {s1_sub}")
+        print(f"Tanda tangan S2: {s2_sub}")
+        
+        # Verify cover message (by third party)
+        cover_valid = sc.verify_cover_message(cover, s1_sub, s2_sub)
+        print(f"Verifikasi pesan samaran: {'✅ BERHASIL' if cover_valid else '❌ GAGAL'}")
+        
+        # Decrypt original message (by legitimate receiver)
+        decrypted_msg = sc.decrypt_original_message(s1_sub, s2_sub)
+        print(f"Pesan asli yang didekripsi: {decrypted_msg}")
+        print(f"Dekripsi berhasil: {'✅ YA' if decrypted_msg == original_msg else '❌ TIDAK'}")
+        
+        if decrypted_msg == original_msg and cover_valid and is_valid:
+            print(f"\n🎉 SEMUA TEST BERHASIL! Algoritma sekarang bekerja dengan benar!")
+        else:
+            print(f"\n⚠️  Masih ada masalah yang perlu diperbaiki.")
+            
+    except ValueError as e:
+        print(f"❌ Error: {e}")
+        print("💡 Tip: Coba dengan pesan yang relatif prima dengan n")
