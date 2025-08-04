@@ -1,0 +1,12 @@
+# Dependencies untuk Algoritma Ong-Schnorr-Shamir
+# 
+# Project ini menggunakan library standar Python saja,
+# sehingga tidak memerlukan dependencies eksternal.
+#
+# Minimal Python version: 3.7+
+#
+# Untuk development dan testing (opsional):
+# pytest>=6.0.0
+# black>=21.0.0
+# flake8>=3.8.0
+# mypy>=0.800
