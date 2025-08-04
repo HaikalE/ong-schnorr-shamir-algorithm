@@ -10,6 +10,7 @@ class OngSchnorrShamir:
     2. Subliminal Channel Scheme
     
     FIXED VERSION - Memperbaiki bug matematis fundamental
+    CLEANED - Removed demo code, pure library now
     """
     
     def __init__(self, n: int = None, k: int = None):
@@ -264,69 +265,5 @@ def generate_keys(bits: int = 512) -> Tuple[int, int, int]:
     return oss.n, oss.k, oss.h
 
 
-if __name__ == "__main__":
-    # Demo dengan implementasi yang sudah diperbaiki
-    print("=== Ong-Schnorr-Shamir Algorithm Demo (FIXED VERSION) ===")
-    print("\n🔧 PERBAIKAN IMPLEMENTASI:")
-    print("- Formula S2 diperbaiki: k * (1/2) * term, bukan (1/2k) * term")
-    print("- Formula dekripsi subliminal: w = S1 - k^-1 * S2, bukan plus")
-    
-    print("\n1. Digital Signature Scheme:")
-    
-    # Digital Signature
-    ds = DigitalSignature()
-    message = 12345
-    
-    print(f"Kunci publik (n): {ds.n}")
-    print(f"Kunci privat (k): {ds.k}")
-    print(f"Nilai h: {ds.h}")
-    print(f"Pesan: {message}")
-    
-    # Sign message
-    s1, s2, r = ds.sign_message(message)
-    print(f"Tanda tangan S1: {s1}")
-    print(f"Tanda tangan S2: {s2}")
-    print(f"Bilangan acak r: {r}")
-    
-    # Verify signature
-    is_valid = ds.verify_signature(message, s1, s2)
-    print(f"Verifikasi: {'✅ BERHASIL' if is_valid else '❌ GAGAL'}")
-    
-    # Test dengan pesan berbeda untuk memastikan security
-    wrong_message = message + 1
-    is_valid_wrong = ds.verify_signature(wrong_message, s1, s2)
-    print(f"Verifikasi pesan salah ({wrong_message}): {'✅ BERHASIL (MASALAH!)' if is_valid_wrong else '❌ GAGAL (Expected)'}")
-    
-    print("\n2. Subliminal Channel Scheme:")
-    
-    # Subliminal Channel
-    sc = SubliminalChannel()
-    original_msg = 9876
-    cover_msg = 5432
-    
-    print(f"Pesan asli (w): {original_msg}")
-    print(f"Pesan samaran (w'): {cover_msg}")
-    
-    try:
-        # Create subliminal message
-        s1_sub, s2_sub, cover = sc.create_subliminal_message(original_msg, cover_msg)
-        print(f"Tanda tangan S1: {s1_sub}")
-        print(f"Tanda tangan S2: {s2_sub}")
-        
-        # Verify cover message (by third party)
-        cover_valid = sc.verify_cover_message(cover, s1_sub, s2_sub)
-        print(f"Verifikasi pesan samaran: {'✅ BERHASIL' if cover_valid else '❌ GAGAL'}")
-        
-        # Decrypt original message (by legitimate receiver)
-        decrypted_msg = sc.decrypt_original_message(s1_sub, s2_sub)
-        print(f"Pesan asli yang didekripsi: {decrypted_msg}")
-        print(f"Dekripsi berhasil: {'✅ YA' if decrypted_msg == original_msg else '❌ TIDAK'}")
-        
-        if decrypted_msg == original_msg and cover_valid and is_valid:
-            print(f"\n🎉 SEMUA TEST BERHASIL! Algoritma sekarang bekerja dengan benar!")
-        else:
-            print(f"\n⚠️  Masih ada masalah yang perlu diperbaiki.")
-            
-    except ValueError as e:
-        print(f"❌ Error: {e}")
-        print("💡 Tip: Coba dengan pesan yang relatif prima dengan n")
+# CLEANED: Removed if __name__ == "__main__" block
+# This is now a pure library file - demo code moved to demo.py and examples.py
